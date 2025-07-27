@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <title>تحويل الصوت إلى نص</title>
+  <style>
+    body {
+      font-family: 'Tahoma';
+      background-color: #f0f0f0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+    .box {
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+      width: 300px;
+      text-align: center;
+    }
+    button {
+      padding: 10px 20px;
+      background: #28a745;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      margin-top: 10px;
+    }
+    #output {
+      margin-top: 20px;
+      background: #eee;
+      padding: 10px;
+      border-radius: 8px;
+      min-height: 60px;
+    }
+  </style>
+</head>
+<body>
+  <div class="box">
+    <h3>🎤 تحويل الصوت إلى نص</h3>
+    <button onclick="startRecording()">ابدأ التسجيل</button>
+    <div id="output">النص سيظهر هنا...</div>
+  </div>
+
+  <script>
+    function startRecording() {
+      const output = document.getElementById("output");
+
+      if (!('webkitSpeechRecognition' in window)) {
+        output.innerText = "المتصفح لا يدعم هذه الميزة ❌";
+        return;
+      }
+
+      const recognition = new webkitSpeechRecognition();
+      recognition.lang = "ar-EG"; // لغة عربية مصرية
+      recognition.interimResults = false;
+      recognition.maxAlternatives = 1;
+
+      recognition.onstart = () => {
+        output.innerText = "🎙️ جاري الاستماع...";
+      };
+
+      recognition.onerror = (event) => {
+        output.innerText = "حدث خطأ: " + event.error;
+      };
+
+      recognition.onresult = (event) => {
+        const transcript = event.results[0][0].transcript;
+        output.innerText = "📝 " + transcript;
+      };
+
+      recognition.start();
+    }
+  </script>
+</body>
+</html>
